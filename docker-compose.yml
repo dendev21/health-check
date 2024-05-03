@@ -1,0 +1,43 @@
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/api/
+    links:
+      - php
+    restart: always
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - .:/api/
+    restart: always
+
+  mysql:
+      image: mysql:latest
+      volumes:
+          - mysql-data:/var/lib/mysql
+      ports:
+          - "3306:3306"
+      restart: always
+      environment:
+          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_DATABASE: 'db'
+          MYSQL_USER: 'user'
+          MYSQL_PASS: 'pass'
+
+  redis:
+      image: redis:latest
+      restart: always
+
+volumes:
+    mongodb-data:
+    mysql-data:
+    redis-data:
